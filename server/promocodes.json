@@ -1,0 +1,25 @@
+{
+  "hesoyam": { "amount": 1000, "expires": "2027-03-01" },
+  "iddqd": { "amount": 500, "expires": "2026-02-15" },
+  "mafiaboss50lvl": { "amount": 5000, "expires": "2026-05-20" },
+
+  "idkfa": { "amount": 700, "expires": "2026-04-10" },
+  "rosebud": { "amount": 1200, "expires": "2026-01-30" },
+  "motherlode": { "amount": 5000, "expires": "2026-06-05" },
+  "panzer": { "amount": 900, "expires": "2026-03-15" },
+  "giveall": { "amount": 1500, "expires": "2026-03-28" },
+  "impulse101": { "amount": 2000, "expires": "2026-07-01" },
+  "thereisnospoon": { "amount": 2500, "expires": "2026-05-01" },
+
+  "poweroverwhelming": { "amount": 3000, "expires": "2026-08-12" },
+  "greedisgood": { "amount": 4000, "expires": "2026-04-25" },
+  "howdoyouturnthison": { "amount": 3500, "expires": "2026-06-20" },
+  "whosyourdaddy": { "amount": 4500, "expires": "2026-09-01" },
+  "nofear": { "amount": 800, "expires": "2026-02-01" },
+
+  "allammo": { "amount": 1100, "expires": "2026-03-05" },
+  "bigdaddy": { "amount": 1300, "expires": "2026-04-08" },
+  "iddkfa": { "amount": 750, "expires": "2026-05-14" },
+  "tgm": { "amount": 600, "expires": "2026-03-30" },
+  "goldfinger": { "amount": 1800, "expires": "2024-07-15" }
+}

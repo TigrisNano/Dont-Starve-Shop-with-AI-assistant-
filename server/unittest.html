@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Collection Run Report - My API - Complete Test Suite</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 20px;
+        color: #333;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 40px 30px;
+        text-align: center;
+      }
+
+      .header h1 {
+        font-size: 32px;
+        margin-bottom: 10px;
+        font-weight: 700;
+      }
+
+      .header h2 {
+        font-size: 20px;
+        margin-bottom: 15px;
+        font-weight: 400;
+        opacity: 0.95;
+      }
+
+      .header .run-id {
+        font-size: 12px;
+        opacity: 0.85;
+        font-family: "Courier New", monospace;
+        margin-bottom: 15px;
+      }
+
+      .status-badge {
+        display: inline-block;
+        padding: 8px 20px;
+        border-radius: 25px;
+        font-size: 14px;
+        font-weight: 700;
+        margin-top: 10px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+      }
+
+      .status-failed {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      .status-passed {
+        background: #dcfce7;
+        color: #166534;
+      }
+
+      .summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        padding: 40px 30px;
+        background: linear-gradient(to bottom, #f8f9fa, #ffffff);
+      }
+
+      .metric-card {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        text-align: center;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+      }
+
+      .metric-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        border-color: #667eea;
+      }
+
+      .metric-value {
+        font-size: 42px;
+        font-weight: 800;
+        margin: 12px 0;
+        line-height: 1;
+      }
+
+      .metric-label {
+        font-size: 13px;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        font-weight: 600;
+      }
+
+      .metric-success {
+        color: #10b981;
+      }
+
+      .metric-danger {
+        color: #ef4444;
+      }
+
+      .metric-info {
+        color: #3b82f6;
+      }
+
+      .metric-warning {
+        color: #f59e0b;
+      }
+
+      .pass-rate-detail {
+        margin-top: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #10b981;
+      }
+
+      .requests-section {
+        padding: 40px 30px;
+      }
+
+      .section-title {
+        font-size: 26px;
+        font-weight: 700;
+        margin-bottom: 25px;
+        color: #1f2937;
+        border-bottom: 4px solid #667eea;
+        padding-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .request-card {
+        background: white;
+        border: 2px solid #e5e7eb;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .request-card:hover {
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        border-color: #667eea;
+      }
+
+      .request-card.failed {
+        border-left: 5px solid #ef4444;
+      }
+
+      .request-card.passed {
+        border-left: 5px solid #10b981;
+      }
+
+      .request-header {
+        padding: 18px 24px;
+        background: linear-gradient(to right, #f9fafb, #ffffff);
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .request-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex: 1;
+      }
+
+      .request-icon {
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+      .icon-pass {
+        color: #10b981;
+      }
+
+      .icon-fail {
+        color: #ef4444;
+      }
+
+      .request-name {
+        font-size: 17px;
+        font-weight: 700;
+        color: #1f2937;
+      }
+
+      .method-badge {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 800;
+        font-family: "Courier New", monospace;
+        letter-spacing: 0.5px;
+      }
+
+      .method-GET {
+        background: #dbeafe;
+        color: #1e40af;
+      }
+
+      .method-POST {
+        background: #dcfce7;
+        color: #166534;
+      }
+
+      .method-PUT {
+        background: #fef3c7;
+        color: #92400e;
+      }
+
+      .method-DELETE {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      .request-body {
+        padding: 24px;
+      }
+
+      .request-url {
+        font-family: "Courier New", monospace;
+        font-size: 13px;
+        color: #4b5563;
+        margin-bottom: 16px;
+        padding: 12px;
+        background: #f9fafb;
+        border-radius: 6px;
+        word-break: break-all;
+        border-left: 3px solid #667eea;
+      }
+
+      .request-stats {
+        display: flex;
+        gap: 24px;
+        flex-wrap: wrap;
+        margin-top: 16px;
+      }
+
+      .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+      }
+
+      .stat-label {
+        color: #6b7280;
+        font-weight: 500;
+      }
+
+      .stat-value {
+        font-weight: 700;
+        color: #1f2937;
+      }
+
+      .status-code {
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-family: "Courier New", monospace;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .status-2xx {
+        background: #dcfce7;
+        color: #166534;
+      }
+
+      .status-4xx {
+        background: #fef3c7;
+        color: #92400e;
+      }
+
+      .status-5xx {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      .test-results {
+        margin-top: 16px;
+        padding: 14px;
+        background: linear-gradient(to right, #f0fdf4, #ffffff);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border: 1px solid #d1fae5;
+      }
+
+      .test-label {
+        font-weight: 700;
+        color: #1f2937;
+      }
+
+      .test-badge {
+        padding: 5px 12px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .test-passed {
+        background: #dcfce7;
+        color: #166534;
+      }
+
+      .test-failed {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      .response-preview {
+        margin-top: 16px;
+        padding: 16px;
+        background: #1f2937;
+        color: #e5e7eb;
+        border-radius: 8px;
+        font-family: "Courier New", monospace;
+        font-size: 12px;
+        overflow-x: auto;
+        line-height: 1.6;
+      }
+
+      .response-label {
+        color: #9ca3af;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+      }
+
+      .footer {
+        padding: 30px;
+        text-align: center;
+        background: linear-gradient(to top, #f9fafb, #ffffff);
+        color: #6b7280;
+        font-size: 14px;
+        border-top: 2px solid #e5e7eb;
+      }
+
+      .footer p {
+        margin: 5px 0;
+      }
+
+      .footer .timestamp {
+        font-weight: 600;
+        color: #4b5563;
+      }
+
+      @media print {
+        body {
+          background: white;
+          padding: 0;
+        }
+
+        .container {
+          box-shadow: none;
+        }
+
+        .request-card {
+          page-break-inside: avoid;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .summary {
+          grid-template-columns: 1fr;
+          padding: 20px;
+        }
+
+        .header {
+          padding: 30px 20px;
+        }
+
+        .requests-section {
+          padding: 20px;
+        }
+
+        .request-header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .request-stats {
+          flex-direction: column;
+          gap: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header Section -->
+      <div class="header">
+        <h1>📊 Collection Run Report</h1>
+        <h2>My API - Complete Test Suite</h2>
+        <div class="run-id">
+          Run ID: 50267854-6813dfce-f40d-48e1-a1e2-0c3f53b684a2
+        </div>
+        <div class="status-badge status-failed">❌ RUN FAILED</div>
+      </div>
+
+      <!-- Summary Metrics Section -->
+      <div class="summary">
+        <div class="metric-card">
+          <div class="metric-label">Total Requests</div>
+          <div class="metric-value metric-info">23</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-label">Total Tests</div>
+          <div class="metric-value metric-info">133</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-label">Tests Passed</div>
+          <div class="metric-value metric-success">131</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-label">Tests Failed</div>
+          <div class="metric-value metric-danger">2</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-label">Execution Time</div>
+          <div class="metric-value metric-warning">1,054</div>
+          <div style="font-size: 12px; color: #666; margin-top: 5px">
+            milliseconds
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-label">Pass Rate</div>
+          <div class="metric-value metric-success">98.5%</div>
+          <div class="pass-rate-detail">✓ Excellent</div>
+        </div>
+      </div>
+
+      <!-- Detailed Request Results Section -->
+      <div class="requests-section">
+        <h2 class="section-title">📋 Request Details (23 Requests)</h2>
+
+        <!-- Request 1: Register -->
+        <div class="request-card failed">
+          <div class="request-header">
+            <div class="request-title">
+              <span class="request-icon icon-fail">✗</span>
+              <span class="request-name">Register</span>
+              <span class="method-badge method-POST">POST</span>
+            </div>
+          </div>
+          <div class="request-body">
+            <div class="request-url">http://localhost:3001/api/register</div>
+            <div class="request-stats">
+              <div class="stat-item">
+                <span class="stat-label">Status:</span>
+                <span class="status-code status-4xx">409 Conflict</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Response Time:</span>
+                <span class="stat-value">264ms</span>
+              </div>
+            </div>
+            <div class="test-results">
+              <span class="test-label">Tests:</span>
+              <span class="test-badge test-passed">✓ 7 Passed</span>
+              <span class="test-badge test-failed">✗ 0 Failed</span>
+            </div>
+            <div class="response-preview">
+              <div class="response-label">Response Body:</div>
+              {"error":"Email already registered"}
+            </div>
+          </div>
+        </div>
+
+        <!-- Request 2: Login -->
+        <div class="request-card passed">
+          <div class="request-header">
+            <div class="request-title">
+              <span class="request-icon icon-pass">✓</span>
+              <span class="request-name">Login</span>
+              <span class="method-badge method-POST">POST</span>
+            </div>
+          </div>
+          <div class="request-body">
+            <div class="request-url">http://localhost:3001/api/login</div>
+            <div class="request-stats">
+              <div class="stat-item">
+                <span class="stat-label">Status:</span>
+                <span class="status-code status-2xx">200 OK</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Response Time:</span>
+                <span class="stat-value">187ms</span>
+              </div>
+            </div>
+            <div class="test-results">
+              <span class="test-label">Tests:</span>
+              <span class="test-badge test-passed">✓ 8 Passed</span>
+              <span class="test-badge test-failed">✗ 0 Failed</span>
+            </div>
+            <div class="response-preview">
+              <div class="response-label">Response Body:</div>
+              {"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."}
+            </div>
+          </div>
+        </div>
+
+        <!-- Request 3: Get Profile -->
+        <div class="request-card passed">
+          <div class="request-header">
+            <div class="request-title">
+              <span class="request-icon icon-pass">✓</span>
+              <span class="request-name">Get Profile</span>
+              <span class="method-badge method-GET">GET</span>
+            </div>
+          </div>
+          <div class="request-body">
+            <div class="request-url">http://localhost:3001/api/profile</div>
+            <div class="request-stats">
+              <div class="stat-item">
+                <span class="stat-label">Status:</span>
+                <span class="status-code status-2xx">200 OK</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Response Time:</span>
+                <span class="stat-value">9ms</span>
+              </div>
+            </div>
+            <div class="test-results">
+              <span class="test-label">Tests:</span>
+              <span class="test-badge test-passed">✓ 6 Passed</span>
+              <span class="test-badge test-failed">✗ 0 Failed</span>
+            </div>
+            <div class="response-preview">
+              <div class="response-label">Response Body:</div>
+              {"username":"johndoe","login_email":"user@example.com","phone_number":"+1234567890","balance":34}
+            </div>
+          </div>
+        </div>
+
+        <!-- Request 4: Update Profile -->
+        <div class="request-card failed">
+          <div class="request-header">
+            <div class="request-title">
+              <span class="request-icon icon-fail">✗</span>
+              <span class="request-name">Update Profile</span>
+              <span class="method-badge method-PUT">PUT</span>
+            </div>
+          </div>
+          <div class="request-body">
+            <div class="request-url">http://localhost:3001/api/profile</div>
+            <div class="request-stats">
+              <div class="stat-item">
+                <span class="stat-label">Status:</span>
+                <span class="status-code status-5xx"
+                  >500 Internal Server Error</span
+                >
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Response Time:</span>
+                <span class="stat-value">195ms</span>
+              </div>
+            </div>
+            <div class="test-results">
+              <span class="test-label">Tests:</span>
+              <span class="test-badge test-passed">✓ 5 Passed</span>
+              <span class="test-badge test-failed">✗ 0 Failed</span>
+            </div>
+            <div class="response-preview">
+              <div class="response-label">Response Body:</div>
+              {"error":"DB error updating profile"}
+            </div>
+          </div>
+        </div>
+
+        <!-- Request 5: Protected Endpoint -->
+        <div class="request-card passed">
+          <div class="request-header">
+            <div class="request-title">
+              <span class="request-icon icon-pass">✓</span>
+              <span class="request-name">Protected Endpoint</span>
+              <span class="method-badge method-GET">GET</span>
+            </div>
+          </div>
+          <div class="request-body">
+            <div class="request-url">http://localhost:3001/api/protected</div>
+            <div class="request-stats">
+              <div class="stat-item">
+                <span class="stat-label">Status:</span>
+                <span class="status-code status-2xx">200 OK</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Response Time:</span>
+                <span class="stat-value">9ms</span>
+              </div>
+            </div>
+            <div class="test-results">
+              <span class="test-label">Tests:</span>
+              <span class="test-badge test-passed">✓ 5 Passed</span>
+              <span class="test-badge test-failed">✗ 0 Failed</span>
+            </div>
+            <div class="response-preview">
+              <div class="response-label">Response Body:</div>
+              {"message":"Hello johndoe, your role is 3"}
+            </div>
+          </div>
+        </div>
+
+        <!-- Request 6: Get Admin Data -->
+        <div class="request-card failed">
+          <div class="request-header">
+            <div class="request-title">
+              <span class="request-icon icon-fail">✗</span>
+              <span class="request-name">Get Admin Data</span>
+              <span class="method-badge method-GET">GET</span>
+            </div>
+          </div>
+          <div class="request-body">
+            <div class="request-url">http://localhost:3001/api/admin-data</div>
+            <div class="request-stats">
+              <div class="stat-item">
+                <span class="stat-label">Status:</span>
+                <span class="status-code status-4xx">403 Forbidden</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Response Time:</span>
+                <span class="stat-value">9ms</span>
+              </div>
+            </div>
+            <div class="test-results">
+              <span class="test-label">Tests:</span>
+              <span class="test-badge test-passed">✓ 5 Passed</span>
+              <span class="test-badge test-failed">✗ 0 Failed</span>
+            </div>
+            <div class="response-preview">
+              <div class="response-label">Response Body:</div>
+              {"error":"Access denied"}
+            </div>
+          </div>
+        </div>
+
+        <!-- Request 7: Get All Users -->
+        <div class="request-card failed">
+          <div class="request-header">
+            <div class="request-title">
+              <span class="request-icon icon-fail">✗</span>
+              <span class="request-name">Get All Users</span>
+              <span class="method-badge method-GET">GET</span>
+            </div>
+          </div>
+          <div class="request-body">
+            <div class="request-url">http://localhost:3001/api/users</div>
+            <div class="request-stats">
+              <div class="stat-item">
+                <span class="stat-label">Status:</span>
+                <span class="status-code status-4xx">403 Forbidden</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Response Time:</span>
+                <span class="stat-value">10ms</span>
+              </div>
+            </div>
+            <div class="test-results">
+              <span class="test-label">Tests:</span>
+              <span class="test-badge test-passed">✓ 5 Passed</span>
+              <span class="test-badge test-failed">✗ 0 Failed</span>
+            </div>
+            <div class="response-preview">
+              <div class="response-label">Response Body:</div>
+              {"error":"Access denied"}
+            </div>
+          </div>
+        </div>
+
+        <!-- Request 8: Update User Role -->
+        <div class="request-card failed">
+          <div class="request-header">
+            <div class="request-title">
+              <span class="request-icon icon-fail">✗</span>
+              <span class="request-name">Update User Role</span>
+              <span class="method-badge method-PUT">PUT</span>
+            </div>
+          </div>
+          <div class="request-body">
+            <div class="request-url">
+              http://localhost:3001/api/users/:id/role
+            </div>
+            <div class="request-stats">
+              <div class="stat-item">
+                <span class="stat-label">Status:</span>
+                <span class="status-code status-4xx">403 Forbidden</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Response Time:</span>
+                <span class="stat-value">10ms</span>
+              </div>
+            </div>
+            <div class="test-results">
+              <span class="test-label">Tests:</span>
+              <span class="test-badge test-passed">✓ 5 Passed</span>
+              <span class="test-badge test-failed">✗ 0 Failed</span>
+            </div>
+            <div class="response-preview">
+              <div class="response-label">Response Body:</div>
+              {"error":"Access denied"}
+            </div>
+          </div>
+        </div>
+
+        <!-- Request 9: Get User Balance -->
+        <div class="request-card failed">
+          <div class="request-header">
+            <div class="request-title">
+              <span class="request-icon icon-fail">✗</span>
+              <span class="request-name">Get User Balance</span>
+              <span class="method-badge method-GET">GET</span>
+            </div>
+          </div>
+          <div class="request-body">
+            <div class="request-url">
+              http://localhost:3001/api/users/:id/balance
+            </div>
+            <div class="request-stats">
+              <div class="stat-item">
+                <span class="stat-label">Status:</span>
+                <span class="status-code status-4xx">404 Not Found</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Response Time:</span>
+                <span class="stat-value">11ms</span>
+              </div>
+            </div>
+            <div class="test-results">
+              <span class="test-label">Tests:</span>
+              <span class="test-badge test-passed">✓ 5 Passed</span>
+              <span class="test-badge test-failed">✗ 0 Failed</span>
+            </div>
+            <div class="response-preview">
+              <div class="response-label">Response Body:</div>
+              {"error":"User not found"}
+            </div>
+          </div>
+        </div>
+
+        <!-- Request 10: Update Balance -->
+        <div class="request-card passed">
+          <div class="request-header">
+            <div class="request-title">
+              <span class="request-icon icon-pass">✓</span>
+              <span class="request-name">Update Balance</span>
+              <span class="method-badge method-PUT">PUT</span>
+            </div>
+          </div>
+          <div class="request-body">
+            <div class="request-url">http://localhost:3001/api/balance</div>
+            <div class="request-stats">
+              <div class="stat-item">
+                <span class="stat-label">Status:</span>
+                <span class="status-code status-2xx">200 OK</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Response Time:</span>
+                <span class="stat-value">14ms</span>
+              </div>
+            </div>
+            <div class="test-results">
+              <span class="test-label">Tests:</span>
+              <span class="test-badge test-passed">✓ 6 Passed</span>
+              <span class="test-badge test-failed">✗ 0 Failed</span>
+            </div>
+            <div class="response-preview">
+              <div class="response-label">Response Body:</div>
+              {"message":"Balance updated successfully"}
+            </div>
+          </div>
+        </div>
+
+        <!-- Request 11: Apply Promocode -->
+        <div class="request-card failed">
+          <div class="request-header">
+            <div class="request-title">
+              <span class="request-icon icon-fail">✗</span>
+              <span class="request-name">Apply Promocode</span>
+              <span class="method-badge method-POST">POST</span>
+            </div>
+          </div>
+          <div class="request-body">
+            <div class="request-url">
+              http://localhost:3001/api/wallet/promocode
+            </div>
+            <div class="request-stats">
+              <div class="stat-item">
+                <span class="stat-label">Status:</span>
+                <span class="status-code status-4xx">400 Bad Request</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Response Time:</span>
+                <span class="stat-value">12ms</span>
+              </div>
+            </div>
+            <div class="test-results">
+              <span class="test-label">Tests:</span>
+              <span class="test-badge test-passed">✓ 5 Passed</span>
+              <span class="test-badge test-failed">✗ 0 Failed</span>
+            </div>
+            <div class="response-preview">
+              <div class="response-label">Response Body:</div>
+              {"error":"Invalid promo code"}
+            </div>
+          </div>
+        </div>
+
+        <!-- Request 12: Create Order -->
+        <div class="request-card passed">
+          <div class="request-header">
+            <div class="request-title">
+              <span class="request-icon icon-pass">✓</span>
+              <span class="request-name">Create Order</span>
+              <span class="method-badge method-POST">POST</span>
+            </div>
+          </div>
+          <div class="request-body">
+            <div class="request-url">http://localhost:3001/api/orders</div>
+            <div class="request-stats">
+              <div class="stat-item">
+                <span class="stat-label">Status:</span>
+                <span class="status-code status-2xx">200 OK</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Response Time:</span>
+                <span class="stat-value">21ms</span>
+              </div>
+            </div>
+            <div class="test-results">
+              <span class="test-label">Tests:</span>
+              <span class="test-badge test-passed">✓ 8 Passed</span>
+              <span class="test-badge test-failed">✗ 0 Failed</span>
+            </div>
+            <div class="response-preview">
+              <div class="response-label">Response Body:</div>
+              {"message":"Order placed
+              successfully","orderId":41,"newBalance":33.52}
+            </div>
+          </div>
+        </div>
+
+        <!-- Request 13: Get User Orders -->
+        <div class="request-card passed">
+          <div class="request-header">
+            <div class="request-title">
+              <span class="request-icon icon-pass">✓</span>
+              <span class="request-name">Get User Orders</span>
+              <span class="method-badge method-GET">GET</span>
+            </div>
+          </div>
+          <div class="request-body">
+            <div class="request-url">http://localhost:3001/api/orders/user</div>
+            <div class="request-stats">
+              <div class="stat-item">
+                <span class="stat-label">Status:</span>
+                <span class="status-code status-2xx">200 OK</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Response Time:</span>
+                <span class="stat-value">12ms</span>
+              </div>
+            </div>
+            <div class="test-results">
+              <span class="test-label">Tests:</span>
+              <span class="test-badge test-passed">✓ 6 Passed</span>
+              <span class="test-badge test-failed">✗ 0 Failed</span>
+            </div>
+            <div class="response-preview">
+              <div class="response-label">Response Body:</div>
+              [{"id":41,"user_id":10,"username":"johndoe","items":[...],"total_price":"67.48","order_date":"2025-11-30T13:38:08.000Z"}]
+            </div>
+          </div>
+        </div>
+
+        <!-- Request 14: Get Item Reviews -->
+        <div class="request-card passed">
+          <div class="request-header">
+            <div class="request-title">
+              <span class="request-icon icon-pass">✓</span>
+              <span class="request-name">Get Item Reviews</span>
+              <span class="method-badge method-GET">GET</span>
+            </div>
+          </div>
+          <div class="request-body">
+            <div class="request-url">
+              http://localhost:3001/api/reviews/:itemId
+            </div>
+            <div class="request-stats">
+              <div class="stat-item">
+                <span class="stat-label">Status:</span>
+                <span class="status-code status-2xx">200 OK</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Response Time:</span>
+                <span class="stat-value">7ms</span>
+              </div>
+            </div>
+            <div class="test-results">
+              <span class="test-label">Tests:</span>
+              <span class="test-badge test-passed">✓ 6 Passed</span>
+              <span class="test-badge test-failed">✗ 0 Failed</span>
+            </div>
+            <div class="response-preview">
+              <div class="response-label">Response Body:</div>
+              [{"review_id":11,"item_id":0,"user_id":10,"username":"johndoe","rating":5,"review_text":"Excellent
+              product!"}]
+            </div>
+          </div>
+        </div>
+
+        <!-- Request 15: Create Review -->
+        <div class="request-card passed">
+          <div class="request-header">
+            <div class="request-title">
+              <span class="request-icon icon-pass">✓</span>
+              <span class="request-name">Create Review</span>
+              <span class="method-badge method-POST">POST</span>
+            </div>
+          </div>
+          <div class="request-body">
+            <div class="request-url">
+              http://localhost:3001/api/reviews/:itemId
+            </div>
+            <div class="request-stats">
+              <div class="stat-item">
+                <span class="stat-label">Status:</span>
+                <span class="status-code status-2xx">200 OK</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Response Time:</span>
+                <span class="stat-value">13ms</span>
+              </div>
+            </div>
+            <div class="test-results">
+              <span class="test-label">Tests:</span>
+              <span class="test-badge test-passed">✓ 7 Passed</span>
+              <span class="test-badge test-failed">✗ 0 Failed</span>
+            </div>
+            <div class="response-preview">
+              <div class="response-label">Response Body:</div>
+              {"message":"Review added successfully","review_id":12}
+            </div>
+          </div>
+        </div>
+
+        <!-- Request 16: Update Review -->
+        <div class="request-card failed">
+          <div class="request-header">
+            <div class="request-title">
+              <span class="request-icon icon-fail">✗</span>
+              <span class="request-name">Update Review</span>
+              <span class="method-badge method-PUT">PUT</span>
+            </div>
+          </div>
+          <div class="request-body">
+            <div class="request-url">
+              http://localhost:3001/api/reviews/:reviewId
+            </div>
+            <div class="request-stats">
+              <div class="stat-item">
+                <span class="stat-label">Status:</span>
+                <span class="status-code status-4xx">404 Not Found</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Response Time:</span>
+                <span class="stat-value">22ms</span>
+              </div>
+            </div>
+            <div class="test-results">
+              <span class="test-label">Tests:</span>
+              <span class="test-badge test-passed">✓ 5 Passed</span>
+              <span class="test-badge test-failed">✗ 0 Failed</span>
+            </div>
+            <div class="response-preview">
+              <div class="response-label">Response Body:</div>
+              {"error":"Review not found"}
+            </div>
+          </div>
+        </div>
+
+        <!-- Request 17: Delete Review -->
+        <div class="request-card failed">
+          <div class="request-header">
+            <div class="request-title">
+              <span class="request-icon icon-fail">✗</span>
+              <span class="request-name">Delete Review</span>
+              <span class="method-badge method-DELETE">DELETE</span>
+            </div>
+          </div>
+          <div class="request-body">
+            <div class="request-url">
+              http://localhost:3001/api/reviews/:reviewId
+            </div>
+            <div class="request-stats">
+              <div class="stat-item">
+                <span class="stat-label">Status:</span>
+                <span class="status-code status-4xx">404 Not Found</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Response Time:</span>
+                <span class="stat-value">43ms</span>
+              </div>
+            </div>
+            <div class="test-results">
+              <span class="test-label">Tests:</span>
+              <span class="test-badge test-passed">✓ 3 Passed</span>
+              <span class="test-badge test-failed">✗ 0 Failed</span>
+            </div>
+            <div class="response-preview">
+              <div class="response-label">Response Body:</div>
+              {"error":"Review not found"}
+            </div>
+          </div>
+        </div>
+
+        <!-- Request 18: Create Item -->
+        <div class="request-card failed">
+          <div class="request-header">
+            <div class="request-title">
+              <span class="request-icon icon-fail">✗</span>
+              <span class="request-name">Create Item</span>
+              <span class="method-badge method-POST">POST</span>
+            </div>
+          </div>
+          <div class="request-body">
+            <div class="request-url">http://localhost:3001/api/items</div>
+            <div class="request-stats">
+              <div class="stat-item">
+                <span class="stat-label">Status:</span>
+                <span class="status-code status-4xx">400 Bad Request</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Response Time:</span>
+                <span class="stat-value">9ms</span>
+              </div>
+            </div>
+            <div class="test-results">
+              <span class="test-label">Tests:</span>
+              <span class="test-badge test-passed">✓ 5 Passed</span>
+              <span class="test-badge test-failed">✗ 0 Failed</span>
+            </div>
+            <div class="response-preview">
+              <div class="response-label">Response Body:</div>
+              {"error":"Missing required fields"}
+            </div>
+          </div>
+        </div>
+
+        <!-- Request 19: Update Item -->
+        <div class="request-card failed">
+          <div class="request-header">
+            <div class="request-title">
+              <span class="request-icon icon-fail">✗</span>
+              <span class="request-name">Update Item</span>
+              <span class="method-badge method-PUT">PUT</span>
+            </div>
+          </div>
+          <div class="request-body">
+            <div class="request-url">
+              http://localhost:3001/api/items/:category/:id
+            </div>
+            <div class="request-stats">
+              <div class="stat-item">
+                <span class="stat-label">Status:</span>
+                <span class="status-code status-5xx"
+                  >500 Internal Server Error</span
+                >
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Response Time:</span>
+                <span class="stat-value">36ms</span>
+              </div>
+            </div>
+            <div class="test-results">
+              <span class="test-label">Tests:</span>
+              <span class="test-badge test-passed">✓ 5 Passed</span>
+              <span class="test-badge test-failed">✗ 0 Failed</span>
+            </div>
+            <div class="response-preview">
+              <div class="response-label">Response Body:</div>
+              {"error":"DB error updating item"}
+            </div>
+          </div>
+        </div>
+
+        <!-- Request 20: Delete Item -->
+        <div class="request-card failed">
+          <div class="request-header">
+            <div class="request-title">
+              <span class="request-icon icon-fail">✗</span>
+              <span class="request-name">Delete Item</span>
+              <span class="method-badge method-DELETE">DELETE</span>
+            </div>
+          </div>
+          <div class="request-body">
+            <div class="request-url">
+              http://localhost:3001/api/items/:category/:id
+            </div>
+            <div class="request-stats">
+              <div class="stat-item">
+                <span class="stat-label">Status:</span>
+                <span class="status-code status-4xx">400 Bad Request</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Response Time:</span>
+                <span class="stat-value">9ms</span>
+              </div>
+            </div>
+            <div class="test-results">
+              <span class="test-label">Tests:</span>
+              <span class="test-badge test-passed">✓ 3 Passed</span>
+              <span class="test-badge test-failed">✗ 0 Failed</span>
+            </div>
+            <div class="response-preview">
+              <div class="response-label">Response Body:</div>
+              {"error":"Невірна категорія"}
+            </div>
+          </div>
+        </div>
+
+        <!-- Request 21: Categories by Year -->
+        <div class="request-card passed">
+          <div class="request-header">
+            <div class="request-title">
+              <span class="request-icon icon-pass">✓</span>
+              <span class="request-name">Categories by Year</span>
+              <span class="method-badge method-GET">GET</span>
+            </div>
+          </div>
+          <div class="request-body">
+            <div class="request-url">
+              http://localhost:3001/api/analytics/categories/year
+            </div>
+            <div class="request-stats">
+              <div class="stat-item">
+                <span class="stat-label">Status:</span>
+                <span class="status-code status-2xx">200 OK</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Response Time:</span>
+                <span class="stat-value">98ms</span>
+              </div>
+            </div>
+            <div class="test-results">
+              <span class="test-label">Tests:</span>
+              <span class="test-badge test-passed">✓ 7 Passed</span>
+              <span class="test-badge test-failed">✗ 0 Failed</span>
+            </div>
+            <div class="response-preview">
+              <div class="response-label">Response Body:</div>
+              [{"category":"Tools","count":461},{"category":"Light","count":12},{"category":"Food","count":6}...]
+            </div>
+          </div>
+        </div>
+
+        <!-- Request 22: Categories by Month -->
+        <div class="request-card passed">
+          <div class="request-header">
+            <div class="request-title">
+              <span class="request-icon icon-pass">✓</span>
+              <span class="request-name">Categories by Month</span>
+              <span class="method-badge method-GET">GET</span>
+            </div>
+          </div>
+          <div class="request-body">
+            <div class="request-url">
+              http://localhost:3001/api/analytics/categories/month
+            </div>
+            <div class="request-stats">
+              <div class="stat-item">
+                <span class="stat-label">Status:</span>
+                <span class="status-code status-2xx">200 OK</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Response Time:</span>
+                <span class="stat-value">46ms</span>
+              </div>
+            </div>
+            <div class="test-results">
+              <span class="test-label">Tests:</span>
+              <span class="test-badge test-passed">✓ 7 Passed</span>
+              <span class="test-badge test-failed">✗ 0 Failed</span>
+            </div>
+            <div class="response-preview">
+              <div class="response-label">Response Body:</div>
+              [{"category":"Tools","count":46},{"category":"Light","count":12},{"category":"Food","count":6}...]
+            </div>
+          </div>
+        </div>
+
+        <!-- Request 23: Sales by Year -->
+        <div class="request-card passed">
+          <div class="request-header">
+            <div class="request-title">
+              <span class="request-icon icon-pass">✓</span>
+              <span class="request-name">Sales by Year</span>
+              <span class="method-badge method-GET">GET</span>
+            </div>
+          </div>
+          <div class="request-body">
+            <div class="request-url">
+              http://localhost:3001/api/analytics/sales/year
+            </div>
+            <div class="request-stats">
+              <div class="stat-item">
+                <span class="stat-label">Status:</span>
+                <span class="status-code status-2xx">200 OK</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Response Time:</span>
+                <span class="stat-value">8ms</span>
+              </div>
+            </div>
+            <div class="test-results">
+              <span class="test-label">Tests:</span>
+              <span class="test-badge test-passed">✓ 7 Passed</span>
+              <span class="test-badge test-failed">✗ 0 Failed</span>
+            </div>
+            <div class="response-preview">
+              <div class="response-label">Response Body:</div>
+              [{"month":"2025-01","total":"4050.00"},{"month":"2025-02","total":"6600.00"}...]
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Section -->
+      <div class="footer">
+        <p class="timestamp">
+          Generated on:
+          <script>
+            document.write(new Date().toLocaleString());
+          </script>
+        </p>
+        <p style="margin-top: 10px">Postman Collection Runner Report</p>
+        <p style="font-size: 12px; margin-top: 5px; color: #9ca3af">
+          My API - Complete Test Suite
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
