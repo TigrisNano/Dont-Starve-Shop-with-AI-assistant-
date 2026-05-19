@@ -1,0 +1,87 @@
+.catalog-container {
+  display: flex;
+  position: relative;
+}
+.sidebar {
+  margin-top: 4px;
+  width: 15%;
+  min-width: 15%;
+  background-color: #f4f4f4;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.items {
+  flex: 1;
+  padding: 1rem;
+  width: calc(100%);
+}
+
+.items-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.catalog-card {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  width: 220px;
+  background-color: white;
+  border-radius: 8px;
+}
+
+.catalog-img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto 1rem;
+}
+
+.catalog-card {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  width: 220px;
+  background-color: white;
+  border-radius: 8px;
+  color: inherit;
+  text-decoration: none;
+  display: block;
+}
+
+.catalog-card:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
+.catalog-card * {
+  color: inherit;
+  text-decoration: none;
+}
+
+.catalog-card {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  width: 220px;
+  background-color: white;
+  border-radius: 8px;
+  color: inherit;
+  text-decoration: none;
+  display: block;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.catalog-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}

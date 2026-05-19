@@ -1,0 +1,44 @@
+.orders-container {
+    max-width: 900px;
+    margin: 20px auto;
+    background: #2c2c2c;
+    padding: 20px;
+    border-radius: 12px;
+    color: #fff;
+  }
+  
+  .order-card {
+    background: #333;
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #000;
+  }
+  
+  .order-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .order-items {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .order-items th, .order-items td {
+    padding: 8px;
+    border-bottom: 1px solid #444;
+    text-align: center;
+  }
+  
+  .order-thumb {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    object-fit: cover;
+  }
+  
+  h2 {
+    text-align: center;
+  }
